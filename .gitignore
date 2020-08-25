@@ -108,3 +108,6 @@ config/secrets.py
 
 # Ignore tmp cached files
 /cache
+
+# Ignore sub-repo https://github.com/AllenDowney/ThinkStats2
+/downey
