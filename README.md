@@ -41,7 +41,7 @@ This guide follows instructions provided by [this Digital Ocean article](https:/
 1. Create conda environment:
 
         $ cd think-stats
-        $ conda env create --name think-stats --file=environment.yml
+        $ conda env create --name think-stats --file=think-stats.yml
         $ conda activate think-stats
 
 1. Test Repo:
