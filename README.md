@@ -50,3 +50,19 @@ This guide follows instructions provided by [this Digital Ocean article](https:/
         $ python nsfg.py
         (13593, 244)
         All tests passed.
+
+
+## Development
+The app comes packaged with [flake8](http://flake8.pycqa.org/en/latest/) for style guide enforcement. Before commiting any code, please run `flake8` and correct any reported issues:
+
+```
+# Bad: needs to be fixed
+$ cd think-stats
+$ flake8
+./tests/preface/nsfg.py:10:1: F401 'sys' imported but unused
+
+# Good: no output
+$ flake8
+```
+
+Please feel free to submit pull requests and file bugs on the issue tracker. This is a hobby project of mine so I cannot guarantee a prompt response.
