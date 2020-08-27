@@ -33,7 +33,6 @@ This guide follows instructions provided by [this Digital Ocean article](https:/
        modified      /home/klenwell/.bashrc
 
 ### Create New Conda Environment
-
 1. Clone repository:
 
         $ git clone git@github.com:klenwell/think-stats.git
@@ -44,12 +43,27 @@ This guide follows instructions provided by [this Digital Ocean article](https:/
         $ conda env create --name think-stats --file=think-stats.yml
         $ conda activate think-stats
 
-1. Test Repo:
+1. Check conda installation:
 
-        $ cd tests/preface
-        $ python nsfg.py
-        (13593, 244)
-        All tests passed.
+        $ conda info
+
+            active environment : think-stats
+           active env location : /home/klenwell/anaconda3/envs/think-stats
+                   shell level : 2
+              user config file : /home/klenwell/.condarc
+        populated config files :
+                 conda version : 4.8.3
+
+### Test Application
+I prefer the command line to iPython. So this project is set up to use the [Cement framework](https://github.com/datafolklabs/cement) for command line interactions. To test it, run the following command (it will drop you in the Python debugger):
+
+    $ python app.py interactive
+
+  To use the iPython local web application, first run:
+
+    $ ipython notebook
+
+Then open the URL listed in your browser if not automatically redirected to your browser.
 
 
 ## Development
