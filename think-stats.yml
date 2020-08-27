@@ -10,6 +10,7 @@ bleach=3.1.5=py_0
 blosc=1.20.0=hd408876_0
 bzip2=1.0.8=h7b6447c_0
 ca-certificates=2020.7.22=0
+cement=3.0.2=py37_1000
 certifi=2020.6.20=py37_0
 cffi=1.14.1=py37he30daa8_0
 cycler=0.10.0=py37_0
@@ -101,6 +102,7 @@ pyrsistent=0.16.0=py37h7b6447c_0
 pytables=3.6.1=py37h71ec239_0
 python=3.7.7=hcff3b4d_5
 python-dateutil=2.8.1=py_0
+python_abi=3.7=1_cp37m
 pytz=2020.1=py_0
 pyzmq=19.0.1=py37he6710b0_1
 qt=5.9.7=h5867ecd_1
