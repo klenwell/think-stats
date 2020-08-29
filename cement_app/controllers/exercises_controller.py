@@ -31,4 +31,4 @@ class ExercisesController(Controller):
         for count in range(7):
             assert preg_count_buckets[count] == nsfg_codebook_preg_counts[count]
 
-        breakpoint()
+        print(extract.respondents)

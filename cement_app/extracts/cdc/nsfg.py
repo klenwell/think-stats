@@ -8,6 +8,7 @@ http://greenteapress.com/thinkstats2/html/thinkstats2002.html
 from os.path import join as path_join
 import pandas
 import numpy as np
+from collections import defaultdict
 
 from cement_app.services.caching_service import cached_property
 from cement_app.config.app import DATA_ROOT
@@ -19,6 +20,8 @@ from cement_app.config.app import DATA_ROOT
 CDC_DATA_DIR = path_join(DATA_ROOT, 'cdc')
 RESPONDENTS_DAT_FILE = '2002FemResp.dat.gz'
 RESPONDENTS_DCT_FILE = '2002FemResp.dct'
+PREGANCIES_DAT_FILE = '2002FemPreg.dat.gz'
+PREGANCIES_DCT_FILE = '2002FemPreg.dct'
 
 
 class FamilyGrowthExtract:
@@ -36,6 +39,42 @@ class FamilyGrowthExtract:
 
         dataframe = pandas.read_fwf(data_path, names=names, widths=col_widths, compression='gzip')
         return dataframe
+
+    @cached_property
+    def pregnancies(self):
+        data_path = path_join(CDC_DATA_DIR, PREGANCIES_DAT_FILE)
+        dct_path = path_join(CDC_DATA_DIR, PREGANCIES_DCT_FILE)
+
+        column_df = self.dct_file_to_dataframe(dct_path)
+        names = column_df.name.values
+        col_widths = column_df.width.astype(np.int).values
+
+        dataframe = pandas.read_fwf(data_path, names=names, widths=col_widths, compression='gzip')
+
+        # Data normalizations
+        # mother's age is encoded in centiyears; convert to years
+        dataframe.agepreg /= 100.0
+
+        # replace 'not ascertained', 'refused', 'don't know' with NaN
+        na_vals = [97, 98, 99]
+        dataframe.birthwgt_lb.replace(na_vals, np.nan, inplace=True)
+        dataframe.birthwgt_oz.replace(na_vals, np.nan, inplace=True)
+        dataframe.hpagelb.replace(na_vals, np.nan, inplace=True)
+
+        dataframe.babysex.replace([7, 9], np.nan, inplace=True)
+        dataframe.nbrnaliv.replace([9], np.nan, inplace=True)
+
+        # birthweight is stored in two columns, lbs and oz. convert to a single column in lb
+        dataframe['totalwgt_lb'] = dataframe.birthwgt_lb + dataframe.birthwgt_oz / 16.0
+
+        return dataframe
+
+    @cached_property
+    def response_cases(self):
+        cases = defaultdict(list)
+        for index, case_id in self.pregnancies.caseid.iteritems():
+            cases[case_id].append(index)
+        return cases
 
     #
     # Private Methods
