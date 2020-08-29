@@ -26,9 +26,9 @@ class ExercisesController(Controller):
             '7+': 158
         }
         extract = FamilyGrowthExtract()
-        preg_count_buckets = extract.respondents.pregnum.value_counts()
+        preg_count_buckets = extract.females.pregnum.value_counts()
 
         for count in range(7):
             assert preg_count_buckets[count] == nsfg_codebook_preg_counts[count]
 
-        print(extract.respondents)
+        print(extract.females)

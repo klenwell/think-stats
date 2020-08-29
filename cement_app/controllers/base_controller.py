@@ -19,6 +19,9 @@ class BaseController(Controller):
         indices = extract.response_cases[random_case_id]
         print(extract.pregnancies.outcome[indices].values)
 
+        female = extract.females[extract.females.caseid == random_case_id]
+        print(female)
+
         breakpoint()
 
     # python app.py test -f foo arg1 extra1 extra2

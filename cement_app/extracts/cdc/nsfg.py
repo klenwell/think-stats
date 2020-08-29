@@ -29,7 +29,7 @@ class FamilyGrowthExtract:
     # Properties
     #
     @cached_property
-    def respondents(self):
+    def females(self):
         data_path = path_join(CDC_DATA_DIR, RESPONDENTS_DAT_FILE)
         dct_path = path_join(CDC_DATA_DIR, RESPONDENTS_DCT_FILE)
 
