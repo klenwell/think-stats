@@ -9,6 +9,7 @@ from os.path import join as path_join
 import pandas
 import numpy as np
 from collections import defaultdict
+import random
 
 from cement_app.services.caching_service import cached_property
 from cement_app.config.app import DATA_ROOT
@@ -75,6 +76,12 @@ class FamilyGrowthExtract:
         for index, case_id in self.pregnancies.caseid.iteritems():
             cases[case_id].append(index)
         return cases
+
+    @property
+    def random_female(self):
+        case_ids = list(self.response_cases.keys())
+        random_case_id = random.choice(case_ids)
+        return self.females[self.females.caseid == random_case_id]
 
     #
     # Private Methods

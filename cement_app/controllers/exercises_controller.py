@@ -28,7 +28,9 @@ class ExercisesController(Controller):
         extract = FamilyGrowthExtract()
         preg_count_buckets = extract.females.pregnum.value_counts()
 
+        # Compare value counts to the published results in the NSFG codebook.
         for count in range(7):
             assert preg_count_buckets[count] == nsfg_codebook_preg_counts[count]
 
-        print(extract.females)
+        vars = {'extract': extract}
+        self.app.render(vars, 'exercises/ch1_2.jinja2')
