@@ -55,11 +55,18 @@ This guide follows instructions provided by [this Digital Ocean article](https:/
                  conda version : 4.8.3
 
 ### Test Application
-I prefer the command line to iPython. So this project is set up to use the [Cement framework](https://github.com/datafolklabs/cement) for command line interactions. To test it, run the following command (it will drop you in the Python debugger):
+I prefer the command line to iPython. So this project is set up to use the [Cement framework](https://github.com/datafolklabs/cement) for command line interactions. To test Think Stats is ready for you, run the following commands:
+
+    $ cd tests/preface/
+    $ python nsfg.py
+    (13593, 244)
+    All tests passed.
+
+To drop into the Python debugger (from project root directory):
 
     $ python app.py interactive
 
-  To use the iPython local web application, first run:
+To use the iPython local web application, first run (from project root):
 
     $ ipython notebook
 

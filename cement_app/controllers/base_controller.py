@@ -10,6 +10,18 @@ class BaseController(Controller):
     # This command can be used for testing and development.
     @expose(help="Run the Application interactively. Useful for testing and development.")
     def interactive(self):
+        from cement_app.extracts.cdc.nsfg import FamilyGrowthExtract
+        import random
+
+        extract = FamilyGrowthExtract()
+        case_ids = list(extract.response_cases.keys())
+        random_case_id = random.choice(case_ids)
+        indices = extract.response_cases[random_case_id]
+        print(extract.pregnancies.outcome[indices].values)
+
+        female = extract.females[extract.females.caseid == random_case_id]
+        print(female)
+
         breakpoint()
 
     # python app.py test -f foo arg1 extra1 extra2

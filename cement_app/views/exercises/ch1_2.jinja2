@@ -1,0 +1,16 @@
+Think Stats 2e
+Chapter 1 | Exercise 2
+======================
+# NSFG Female Respondents
+{{ extract.females }}
+
+
+# pregnum value counts
+{{ extract.females.pregnum.value_counts() }}
+
+
+# Random Respondent with Pregnancy Indices
+{% set int_case_id = extract.random_female.caseid|int -%}
+{{ extract.random_female }}
+
+Pregnancy Indices: {{ extract.pregnancies.outcome[extract.response_cases[int_case_id]].values }}
