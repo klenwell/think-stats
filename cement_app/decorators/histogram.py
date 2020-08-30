@@ -26,15 +26,11 @@ class Histogram(MutableMapping):
         self.label = label
 
     #
-    # Properties
+    # Instance Methods
     #
-    @property
     def values(self):
         return list(self.keys())
 
-    #
-    # Instance Methods
-    #
     def freq(self, key):
         return self.store.get(key, 0)
 

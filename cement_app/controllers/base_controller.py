@@ -15,8 +15,11 @@ class BaseController(Controller):
         values = [1, 2, 2, 3, 5]
         histogram = Histogram(values)
         print(histogram)
-        print(histogram.values)
+        print(histogram.values())
         print(histogram.freq(2))
+
+        print([(v, histogram.freq(v)) for v in sorted(histogram.values())])
+        print([(v, freq) for v, freq in histogram.items()])
 
         breakpoint()
 
