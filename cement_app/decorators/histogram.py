@@ -1,5 +1,6 @@
 from collections.abc import MutableMapping
 from collections import Counter
+from matplotlib import pyplot
 
 
 class Histogram(MutableMapping):
@@ -33,6 +34,16 @@ class Histogram(MutableMapping):
 
     def freq(self, key):
         return self.store.get(key, 0)
+
+    def plot(self):
+        options = {
+            'linewidth': 0,
+            'alpha': 0.6
+        }
+
+        xs, ys = zip(*sorted(self.items()))
+        pyplot.bar(xs, ys, **options)
+        pyplot.show()
 
     #
     # Private Methods

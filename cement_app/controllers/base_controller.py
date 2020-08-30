@@ -21,6 +21,8 @@ class BaseController(Controller):
         print([(v, histogram.freq(v)) for v in sorted(histogram.values())])
         print([(v, freq) for v, freq in histogram.items()])
 
+        histogram.plot()
+
         breakpoint()
 
     # python app.py test -f foo arg1 extra1 extra2
