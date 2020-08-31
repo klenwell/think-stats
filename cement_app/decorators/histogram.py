@@ -2,6 +2,7 @@ from collections.abc import MutableMapping
 from collections import Counter
 from matplotlib import pyplot
 from math import isnan
+from statistics import stdev
 
 
 class Histogram(MutableMapping):
@@ -23,6 +24,7 @@ class Histogram(MutableMapping):
     # Constructor
     #
     def __init__(self, data_list, label=None):
+        self.data = data_list
         self.store = dict()
         self.update(Counter(data_list))
 
@@ -30,10 +32,26 @@ class Histogram(MutableMapping):
         self.label = label
 
     #
+    # Properties
+    #
+    @property
+    def mean(self):
+        total = sum([v*n for (v,n) in self.items()])
+        count = sum(self.counts())
+        return total / count
+
+    @property
+    def stdev(self):
+        return stdev(self.data)
+
+    #
     # Instance Methods
     #
     def values(self):
         return list(self.keys())
+
+    def counts(self):
+        return [count for (_, count) in self.items()]
 
     def freq(self, key):
         return self.store.get(key, 0)
