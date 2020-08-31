@@ -1,6 +1,7 @@
 from collections.abc import MutableMapping
 from collections import Counter
 from matplotlib import pyplot
+from math import isnan
 
 
 class Histogram(MutableMapping):
@@ -13,7 +14,9 @@ class Histogram(MutableMapping):
     def from_series(series, label=None):
         """series = pandas.series
         """
-        histogram = Histogram(series.values(), label=label)
+        data_list = series.to_list()
+        cleaned_data = [n for n in data_list if not isnan(n)]
+        histogram = Histogram(cleaned_data, label=label)
         return histogram
 
     #
@@ -35,14 +38,23 @@ class Histogram(MutableMapping):
     def freq(self, key):
         return self.store.get(key, 0)
 
-    def plot(self):
-        options = {
+    def plot(self, **options):
+        bar_options = {
             'linewidth': 0,
             'alpha': 0.6
         }
 
+        xlabel = options.get('xlabel')
+        ylabel = options.get('ylabel')
+
+        if xlabel:
+            pyplot.xlabel(xlabel)
+
+        if ylabel:
+            pyplot.ylabel(ylabel)
+
         xs, ys = zip(*sorted(self.items()))
-        pyplot.bar(xs, ys, **options)
+        pyplot.bar(xs, ys, **bar_options)
         pyplot.show()
 
     #

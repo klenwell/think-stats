@@ -56,6 +56,10 @@ class FamilyGrowthExtract:
         # mother's age is encoded in centiyears; convert to years
         dataframe.agepreg /= 100.0
 
+        # birthwgt_lb contains at least one bogus value (51 lbs)
+        # replace with NaN
+        dataframe.loc[dataframe.birthwgt_lb > 20, 'birthwgt_lb'] = np.nan
+
         # replace 'not ascertained', 'refused', 'don't know' with NaN
         na_vals = [97, 98, 99]
         dataframe.birthwgt_lb.replace(na_vals, np.nan, inplace=True)

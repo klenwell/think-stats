@@ -11,19 +11,16 @@ class BaseController(Controller):
     @expose(help="Run the Application interactively. Useful for testing and development.")
     def interactive(self):
         from cement_app.decorators.histogram import Histogram
+        from cement_app.extracts.cdc.nsfg import FamilyGrowthExtract
 
-        values = [1, 2, 2, 3, 5]
-        histogram = Histogram(values)
-        print(histogram)
-        print(histogram.values())
-        print(histogram.freq(2))
+        LIVE_BIRTH = 1
+        extract = FamilyGrowthExtract()
 
-        print([(v, histogram.freq(v)) for v in sorted(histogram.values())])
-        print([(v, freq) for v, freq in histogram.items()])
-
-        histogram.plot()
-
+        live = extract.pregnancies[extract.pregnancies.outcome == LIVE_BIRTH]
+        histogram = Histogram.from_series(live.birthwgt_lb, label='birthweight lb')
         breakpoint()
+
+        histogram.plot(xlabel='value', ylabel='frequency')
 
     # python app.py test -f foo arg1 extra1 extra2
     @expose(
