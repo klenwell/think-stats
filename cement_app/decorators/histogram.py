@@ -6,7 +6,8 @@ from statistics import stdev
 
 
 class Histogram(MutableMapping):
-    """Source: https://stackoverflow.com/a/3387975/1093087
+    """Dictionary override based on this SO answer:
+    https://stackoverflow.com/a/3387975/1093087
     """
     #
     # Static Methods

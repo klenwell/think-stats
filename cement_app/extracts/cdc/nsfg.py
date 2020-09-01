@@ -70,7 +70,7 @@ class FamilyGrowthExtract:
         dataframe.nbrnaliv.replace([9], np.nan, inplace=True)
 
         # birthweight is stored in two columns, lbs and oz. convert to a single column in lb
-        dataframe['totalwgt_lb'] = dataframe.birthwgt_lb + dataframe.birthwgt_oz / 16.0
+        dataframe['totalwgt_lb'] = dataframe.birthwgt_lb + (dataframe.birthwgt_oz / 16.0)
 
         return dataframe
 
