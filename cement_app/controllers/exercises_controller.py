@@ -11,6 +11,19 @@ class ExercisesController(Controller):
         stacked_on = 'base'
         stacked_type = 'nested'
 
+    # python app.py exercise 2.3
+    @expose(aliases=['2.3'])
+    def ch2_3(self):
+        extract = FamilyGrowthExtract()
+        histogram = Histogram.from_series(extract.pregnancies.prglngth, label="prglngth")
+
+        vars = {
+            'mode': histogram.mode,
+            'mode_freq': histogram.freq(histogram.mode),
+            'modes': histogram.modes
+        }
+        self.app.render(vars, 'exercises/ch2_3.jinja2')
+
     # python app.py exercise 2.1
     @expose(aliases=['2.1'])
     def ch2_1(self):

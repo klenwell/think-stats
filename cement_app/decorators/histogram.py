@@ -45,6 +45,20 @@ class Histogram(MutableMapping):
     def stdev(self):
         return stdev(self.data)
 
+    @property
+    def frequencies(self):
+        return self.counts()
+
+    @property
+    def mode(self):
+        # The mode of a distribution is the most frequent value.
+        return self.modes[0][0]
+
+    @property
+    def modes(self):
+        # https://stackoverflow.com/a/2258273/1093087
+        return sorted(self.items(), key=lambda item: item[1], reverse=True)
+
     #
     # Instance Methods
     #
@@ -54,8 +68,8 @@ class Histogram(MutableMapping):
     def counts(self):
         return [count for (_, count) in self.items()]
 
-    def freq(self, key):
-        return self.store.get(key, 0)
+    def freq(self, value):
+        return self.store.get(value, 0)
 
     def plot(self, **options):
         bar_options = {
