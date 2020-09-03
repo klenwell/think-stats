@@ -10,6 +10,7 @@ import pandas
 import numpy as np
 from collections import defaultdict
 import random
+import math
 
 from cement_app.services.caching_service import cached_property
 from cement_app.config.app import DATA_ROOT
@@ -24,8 +25,30 @@ RESPONDENTS_DCT_FILE = '2002FemResp.dct'
 PREGANCIES_DAT_FILE = '2002FemPreg.dat.gz'
 PREGANCIES_DCT_FILE = '2002FemPreg.dct'
 
+LIVE_BIRTH = 1
+FIRST_BIRTH = 1
+
 
 class FamilyGrowthExtract:
+    #
+    # Static Methods
+    #
+    @staticmethod
+    def cohen_effect_size(this_series, that_series):
+        diff = this_series.mean() - that_series.mean()
+
+        this_var = this_series.var()
+        that_var = that_series.var()
+        this_series_size = len(this_series)
+        that_series_size = len(that_series)
+
+        num = this_series_size * this_var + that_series_size * that_var
+        den = this_series_size + that_series_size
+        pooled_var = num / den
+
+        cohen_d = diff / math.sqrt(pooled_var)
+        return cohen_d
+
     #
     # Properties
     #
@@ -56,6 +79,10 @@ class FamilyGrowthExtract:
         # mother's age is encoded in centiyears; convert to years
         dataframe.agepreg /= 100.0
 
+        # birthwgt_lb contains at least one bogus value (51 lbs)
+        # replace with NaN
+        dataframe.loc[dataframe.birthwgt_lb > 20, 'birthwgt_lb'] = np.nan
+
         # replace 'not ascertained', 'refused', 'don't know' with NaN
         na_vals = [97, 98, 99]
         dataframe.birthwgt_lb.replace(na_vals, np.nan, inplace=True)
@@ -66,7 +93,7 @@ class FamilyGrowthExtract:
         dataframe.nbrnaliv.replace([9], np.nan, inplace=True)
 
         # birthweight is stored in two columns, lbs and oz. convert to a single column in lb
-        dataframe['totalwgt_lb'] = dataframe.birthwgt_lb + dataframe.birthwgt_oz / 16.0
+        dataframe['totalwgt_lb'] = dataframe.birthwgt_lb + (dataframe.birthwgt_oz / 16.0)
 
         return dataframe
 
@@ -82,6 +109,18 @@ class FamilyGrowthExtract:
         case_ids = list(self.response_cases.keys())
         random_case_id = random.choice(case_ids)
         return self.females[self.females.caseid == random_case_id]
+
+    @property
+    def live_births(self):
+        return self.pregnancies[self.pregnancies.outcome == LIVE_BIRTH]
+
+    @property
+    def live_first_births(self):
+        return self.live_births[self.live_births.birthord == FIRST_BIRTH]
+
+    @property
+    def live_non_first_births(self):
+        return self.live_births[self.live_births.birthord != FIRST_BIRTH]
 
     #
     # Private Methods
