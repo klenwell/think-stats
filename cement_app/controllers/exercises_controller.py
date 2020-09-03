@@ -11,6 +11,21 @@ class ExercisesController(Controller):
         stacked_on = 'base'
         stacked_type = 'nested'
 
+    # python app.py exercise 2.4
+    @expose(aliases=['2.4'])
+    def ch2_4(self):
+        extract = FamilyGrowthExtract()
+        first_birth_weights = extract.live_first_births.totalwgt_lb
+        other_birth_weights = extract.live_non_first_births.totalwgt_lb
+        cohen_d = FamilyGrowthExtract.cohen_effect_size(first_birth_weights, other_birth_weights)
+
+        vars = {
+            'first': first_birth_weights,
+            'other': other_birth_weights,
+            'cohen_d': cohen_d
+        }
+        self.app.render(vars, 'exercises/ch2_4.jinja2')
+
     # python app.py exercise 2.3
     @expose(aliases=['2.3'])
     def ch2_3(self):
@@ -44,7 +59,6 @@ class ExercisesController(Controller):
             'other': other_hist
         }
         self.app.render(vars, 'exercises/ch2_1.jinja2')
-
 
     # python app.py exercise 1.2
     @expose(aliases=['1.2'])

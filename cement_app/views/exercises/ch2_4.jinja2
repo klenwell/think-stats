@@ -1,0 +1,15 @@
+Think Stats 2e
+Chapter 2 | Exercise 4
+======================
+Investigate whether first babies are lighter or heavier than others.
+
+# Average Pregnancy Weight
+First: {{ "%.2f" | format(first.mean()) }}
+Other: {{ "%.2f" | format(other.mean()) }}
+
+# Standard Deviation
+First: {{ "%.2f" | format(first.std()) }}
+Other: {{ "%.2f" | format(other.std()) }}
+
+# Cohen Effect Size (difference in means as standard deviations)
+{{ "%.2f" | format(cohen_d) }}

@@ -37,7 +37,7 @@ class Histogram(MutableMapping):
     #
     @property
     def mean(self):
-        total = sum([v*n for (v,n) in self.items()])
+        total = sum([v*n for (v, n) in self.items()])
         count = sum(self.counts())
         return total / count
 
