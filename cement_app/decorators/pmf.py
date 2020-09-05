@@ -66,6 +66,10 @@ class ProbabilityMassFunction(MutableMapping):
         self.store[value] = self.store.get(value, 0) + amount
         return self
 
+    def multiply(self, value, amount):
+        self.store[value] = self.store.get(value, 0) * amount
+        return self
+
     def normalize(self):
         factor = 1 / self.total
 

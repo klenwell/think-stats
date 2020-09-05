@@ -25,6 +25,15 @@ class BaseController(Controller):
         pmf.normalize()
         print(pmf.prob(2))
         print(pmf.total)
+
+        pmf.multiply(2, 0.5)
+        print(pmf.prob(2))
+        print(pmf.total)
+
+        pmf.normalize()
+        print(pmf.prob(2))
+        print(pmf.total)
+
         print(pmf)
         breakpoint()
 
