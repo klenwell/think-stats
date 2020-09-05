@@ -39,6 +39,10 @@ class ProbabilityMassFunction(MutableMapping):
     # Properties
     #
     @property
+    def total(self):
+        return sum(self.store.values())
+
+    @property
     def mean(self):
         pass
 
@@ -52,11 +56,23 @@ class ProbabilityMassFunction(MutableMapping):
     def values(self):
         return list(self.keys())
 
-    def counts(self):
-        return [count for (_, count) in self.items()]
+    def probabilities(self):
+        return self.store.values()
 
     def prob(self, value):
         return self.store.get(value, 0)
+
+    def increase(self, value, amount):
+        self.store[value] = self.store.get(value, 0) + amount
+        return self
+
+    def normalize(self):
+        factor = 1 / self.total
+
+        for val in self.values():
+            self.store[val] *= factor
+
+        return self
 
     def plot(self, **options):
         pass
