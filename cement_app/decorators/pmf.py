@@ -1,5 +1,7 @@
 from collections.abc import MutableMapping
 from math import isnan
+from matplotlib import pyplot
+import numpy as np
 
 from cement_app.decorators.histogram import Histogram
 
@@ -79,7 +81,48 @@ class ProbabilityMassFunction(MutableMapping):
         return self
 
     def plot(self, **options):
-        pass
+        line_options = {
+            'linewidth': 1,
+            'alpha': 0.7
+        }
+
+        xlabel = options.get('xlabel', 'Values')
+        ylabel = options.get('ylabel', 'Probabilities')
+
+        if xlabel:
+            pyplot.xlabel(xlabel)
+
+        if ylabel:
+            pyplot.ylabel(ylabel)
+
+        # xs = values, ys = probabilities
+        xs, ys = zip(*sorted(self.items()))
+
+        # Convert bars to continues series of lines for line chart
+        # Source: https://github.com/AllenDowney/ThinkStats2/blob/b3db0d/thinkplot/thinkplot.py#L468
+        ln_width = options.pop('width', np.diff(xs).min())
+        line_pts = []
+        last_x = np.nan
+        last_y = 0
+
+        for x, y in zip(xs, ys):
+            if (x - last_x) > 1e-5:
+                line_pts.append((last_x, 0))
+                line_pts.append((x, 0))
+
+            line_pts.append((x, last_y))
+            line_pts.append((x, y))
+            line_pts.append((x + ln_width, y))
+
+            last_x = x + ln_width
+            last_y = y
+
+        line_pts.append((last_x, 0))
+        ln_xs, ln_ys = zip(*line_pts)
+
+        # Note: plot vs bar
+        pyplot.plot(ln_xs, ln_ys, **line_options)
+        pyplot.show()
 
     #
     # Private Methods

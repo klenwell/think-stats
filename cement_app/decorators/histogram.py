@@ -89,6 +89,8 @@ class Histogram(MutableMapping):
             pyplot.ylabel(ylabel)
 
         xs, ys = zip(*sorted(self.items()))
+
+        # Note: bar vs plot
         pyplot.bar(xs, ys, **bar_options)
         pyplot.show()
 

@@ -10,31 +10,20 @@ class BaseController(Controller):
     # This command can be used for testing and development.
     @expose(help="Run the Application interactively. Useful for testing and development.")
     def interactive(self):
+        from cement_app.extracts.cdc.nsfg import FamilyGrowthExtract
         from cement_app.decorators.pmf import ProbabilityMassFunction
 
-        pmf = ProbabilityMassFunction([1, 2, 2, 3, 5])
-        assert pmf.prob(1) == 0.2
-        assert pmf.total == sum(pmf.probabilities())
-        print(pmf.prob(2))
-        print(pmf.total)
+        extract = FamilyGrowthExtract()
+        first_births = extract.live_first_births
+        other_births = extract.live_non_first_births
 
-        pmf.increase(2, 0.2)
-        print(pmf.prob(2))
-        print(pmf.total)
+        first_pmf = ProbabilityMassFunction(first_births.prglngth, 'first')
+        first_pmf.plot()
 
-        pmf.normalize()
-        print(pmf.prob(2))
-        print(pmf.total)
+        other_pmf = ProbabilityMassFunction(other_births.prglngth, 'non-first')
+        other_pmf.plot()
 
-        pmf.multiply(2, 0.5)
-        print(pmf.prob(2))
-        print(pmf.total)
-
-        pmf.normalize()
-        print(pmf.prob(2))
-        print(pmf.total)
-
-        print(pmf)
+        first_pmf.plot_against(other_pmf)
         breakpoint()
 
     # python app.py test -f foo arg1 extra1 extra2
