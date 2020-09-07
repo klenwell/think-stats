@@ -122,7 +122,16 @@ class ProbabilityMassFunction(MutableMapping):
 
         # Note: plot vs bar
         pyplot.plot(ln_xs, ln_ys, **line_options)
-        pyplot.show()
+
+        # Still need to call pyplot.show() to display
+        return pyplot
+
+    def plot_against(self, other_pmf):
+        other_pmf.plot()
+        plot = self.plot()
+
+        # Still need to call pyplot.show() to display
+        return plot
 
     #
     # Private Methods

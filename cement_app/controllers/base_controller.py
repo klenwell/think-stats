@@ -18,12 +18,17 @@ class BaseController(Controller):
         other_births = extract.live_non_first_births
 
         first_pmf = ProbabilityMassFunction(first_births.prglngth, 'first')
-        first_pmf.plot()
+        plot = first_pmf.plot()
+        plot.show()
 
         other_pmf = ProbabilityMassFunction(other_births.prglngth, 'non-first')
-        other_pmf.plot()
+        plot = other_pmf.plot()
+        plot.show()
 
-        first_pmf.plot_against(other_pmf)
+        plot = first_pmf.plot_against(other_pmf)
+        plot.xlabel('Weeks')
+        plot.axis([27, 46, 0, 1.0])
+        plot.show()
         breakpoint()
 
     # python app.py test -f foo arg1 extra1 extra2
