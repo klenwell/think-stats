@@ -27,7 +27,7 @@ class BaseController(Controller):
 
         plot = first_pmf.plot_against(other_pmf)
         plot.xlabel('Weeks')
-        plot.axis([27, 46, 0, 1.0])
+        plot.axis([27, 46, 0, 0.6])
         plot.show()
         breakpoint()
 

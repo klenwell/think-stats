@@ -3,6 +3,8 @@ from cement import ex as expose
 
 from cement_app.extracts.cdc.nsfg import FamilyGrowthExtract
 from cement_app.decorators.histogram import Histogram
+from cement_app.decorators.pmf import ProbabilityMassFunction
+from cement_app.collections.pmf import NsfgRespondentsCollection
 
 
 class ExercisesController(Controller):
@@ -10,6 +12,23 @@ class ExercisesController(Controller):
         label = 'exercise'
         stacked_on = 'base'
         stacked_type = 'nested'
+
+    # python app.py exercise 3.1
+    @expose(aliases=['3.1'])
+    def ch3_1(self):
+        kids_per_household = NsfgRespondentsCollection.kids_per_household()
+        pmf = ProbabilityMassFunction(kids_per_household, 'first')
+        breakpoint()
+        biased_pmf = pmf.biased()
+
+        chart = pmf.plot_against(biased_pmf)
+        chart.show()
+
+        vars = {
+            'pmf': pmf,
+            'biased_pmf': biased_pmf
+        }
+        self.app.render(vars, 'exercises/ch3_1.jinja2')
 
     # python app.py exercise 2.4
     @expose(aliases=['2.4'])
