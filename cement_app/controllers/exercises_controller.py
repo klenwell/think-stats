@@ -4,7 +4,7 @@ from cement import ex as expose
 from cement_app.extracts.cdc.nsfg import FamilyGrowthExtract
 from cement_app.decorators.histogram import Histogram
 from cement_app.decorators.pmf import ProbabilityMassFunction
-from cement_app.collections.pmf import NsfgRespondentsCollection
+from cement_app.collections.cdc.nsfg_respondents import NsfgRespondentsCollection
 
 
 class ExercisesController(Controller):
@@ -17,9 +17,10 @@ class ExercisesController(Controller):
     @expose(aliases=['3.1'])
     def ch3_1(self):
         kids_per_household = NsfgRespondentsCollection.kids_per_household()
-        pmf = ProbabilityMassFunction(kids_per_household, 'first')
+        pmf = ProbabilityMassFunction(kids_per_household, 'Kids per Household')
+
+        biased_pmf = pmf.bias()
         breakpoint()
-        biased_pmf = pmf.biased()
 
         chart = pmf.plot_against(biased_pmf)
         chart.show()

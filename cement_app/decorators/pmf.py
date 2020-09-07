@@ -1,7 +1,8 @@
 from collections.abc import MutableMapping
-from math import isnan
+import math
 from matplotlib import pyplot
 import numpy as np
+import copy
 
 from cement_app.decorators.histogram import Histogram
 
@@ -21,7 +22,7 @@ class ProbabilityMassFunction(MutableMapping):
         """series = pandas.series
         """
         data_list = series.to_list()
-        cleaned_data = [n for n in data_list if not isnan(n)]
+        cleaned_data = [n for n in data_list if not math.isnan(n)]
         pmf = ProbabilityMassFunction(cleaned_data, label=label)
         return pmf
 
@@ -46,11 +47,20 @@ class ProbabilityMassFunction(MutableMapping):
 
     @property
     def mean(self):
-        pass
+        return sum(val * prob for val, prob in self.items())
 
     @property
-    def stdev(self):
-        pass
+    def variance(self):
+        mu = self.mean
+        return sum(prob * (val - mu)**2 for val, prob in self.items())
+
+    @property
+    def std_dev(self):
+        return math.sqrt(self.variance)
+
+    @property
+    def mode(self):
+        return max(val for val in self.store.values())
 
     #
     # Instance Methods
@@ -79,6 +89,29 @@ class ProbabilityMassFunction(MutableMapping):
             self.store[val] *= factor
 
         return self
+
+    def bias(self):
+        """
+        For explanation, see section "3.4  The class size paradox" here:
+        http://greenteapress.com/thinkstats2/html/thinkstats2004.html
+        """
+        label = "{} (Biased)".format(self.label)
+        biased_pmf = self.copy(label)
+
+        for val, prob in self.items():
+            biased_pmf.multiply(val, val)
+
+        biased_pmf.normalize()
+        return biased_pmf
+
+    def copy(self, label=None):
+        default_label = "{} (Copied)".format(self.label)
+        label = label if label is not None else default_label
+
+        copied_pmf = copy.copy(self)
+        copied_pmf.label = label
+        copied_pmf.store = copy.copy(self.store)
+        return copied_pmf
 
     def plot(self, **options):
         line_options = {
