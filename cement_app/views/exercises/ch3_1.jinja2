@@ -1,0 +1,18 @@
+Think Stats 2e
+Chapter 3 | Exercise 1
+======================
+Use the NSFG respondent variable numkdhh to construct the actual distribution for the
+number of children under 18 in the household.
+
+Now compute the biased distribution we would see if we surveyed the children and asked
+them how many children under 18 (including themselves) are in their household.
+
+Plot the actual and biased distributions, and compute their means.
+
+# Mean
+Actual: {{ "%.2f" | format(pmf.mean) }}
+Biased: {{ "%.2f" | format(biased_pmf.mean) }}
+
+# Standard Deviation
+Actual: {{ "%.2f" | format(pmf.std_dev) }}
+Biased: {{ "%.2f" | format(biased_pmf.std_dev) }}

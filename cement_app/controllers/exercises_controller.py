@@ -18,10 +18,9 @@ class ExercisesController(Controller):
     def ch3_1(self):
         kids_per_household = NsfgRespondentsCollection.kids_per_household()
         pmf = ProbabilityMassFunction(kids_per_household, 'Kids per Household')
-
         biased_pmf = pmf.bias()
-        breakpoint()
 
+        # Chart will pop up and halt.
         chart = pmf.plot_against(biased_pmf)
         chart.show()
 
