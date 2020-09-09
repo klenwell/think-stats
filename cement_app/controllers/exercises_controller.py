@@ -16,7 +16,12 @@ class ExercisesController(Controller):
     # python app.py exercise 3.2
     @expose(aliases=['3.2'])
     def ch3_2(self):
-        print('TODO')
+        simple_list = [1, 2, 2, 3, 5]
+        pmf = ProbabilityMassFunction(simple_list)
+        vars = {
+            'pmf': pmf
+        }
+        self.app.render(vars, 'exercises/ch3_2.jinja2')
 
     # python app.py exercise 3.1
     @expose(aliases=['3.1'])
