@@ -13,6 +13,11 @@ class ExercisesController(Controller):
         stacked_on = 'base'
         stacked_type = 'nested'
 
+    # python app.py exercise 3.2
+    @expose(aliases=['3.2'])
+    def ch3_2(self):
+        print('TODO')
+
     # python app.py exercise 3.1
     @expose(aliases=['3.1'])
     def ch3_1(self):
