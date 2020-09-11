@@ -1,19 +1,34 @@
 from cement_app.services.caching_service import cached_property
 from cement_app.extracts.cdc.nsfg import FamilyGrowthExtract
+from cement_app.collections.cdc.nsfg_pregnancies import NsfgPregnancies
+from cement_app.models.cdc.mother import Mother
 
 
-class NsfgRespondentsCollection:
+class NsfgRespondents:
     @staticmethod
     def kids_per_household():
         # Returns pandas.core.series.Series object.
-        collection = females_with_multiple_births()
+        collection = NsfgRespondents()
         return collection.data_frame.numkdhh
 
     @staticmethod
-    def females_with_multiple_births():
-        # Returns pandas.core.series.Series object.
-        collection = NsfgRespondentsCollection()
-        return collection.data_frame[collection.data_frame.pregnum > 1]
+    def females_with_multiple_babies():
+        """Returns list of Mother objects.
+        """
+        moms = []
+        nsfg_respondents = NsfgRespondents()
+        nsfg_pregnancies = NsfgPregnancies()
+        data_frame = nsfg_respondents.data_frame[nsfg_respondents.data_frame.pregnum > 1]
+
+        # https://stackoverflow.com/questions/16476924/#comment79152689_16476974
+        for case_id in data_frame['caseid']:
+            pregnancies = nsfg_pregnancies.by_case_id(case_id)
+            mom = Mother(case_id, pregnancies)
+
+            if mom.had_multiple_babies():
+                moms.append(mom)
+
+        return moms
 
     #
     # Properties

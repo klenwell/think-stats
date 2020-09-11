@@ -4,7 +4,7 @@ from cement import ex as expose
 from cement_app.extracts.cdc.nsfg import FamilyGrowthExtract
 from cement_app.decorators.histogram import Histogram
 from cement_app.decorators.pmf import ProbabilityMassFunction
-from cement_app.collections.cdc.nsfg_respondents import NsfgRespondentsCollection
+from cement_app.collections.cdc.nsfg_respondents import NsfgRespondents
 
 
 class ExercisesController(Controller):
@@ -16,10 +16,8 @@ class ExercisesController(Controller):
     # python app.py exercise 3.3
     @expose(aliases=['3.3'])
     def ch3_3(self):
-        moms = NsfgRespondentsCollection.females_with_multiple_births()
-        print(type(moms))
-        breakpoint()
-        preg_len_diffs = [mom.preg_len_diff() for mom in moms]
+        moms = NsfgRespondents.females_with_multiple_babies()
+        preg_len_diffs = [mom.diff_first_baby_weeks() for mom in moms]
         print(sum(preg_len_diffs) / len(preg_len_diffs))
 
     # python app.py exercise 3.2
@@ -35,7 +33,7 @@ class ExercisesController(Controller):
     # python app.py exercise 3.1
     @expose(aliases=['3.1'])
     def ch3_1(self):
-        kids_per_household = NsfgRespondentsCollection.kids_per_household()
+        kids_per_household = NsfgRespondents.kids_per_household()
         pmf = ProbabilityMassFunction(kids_per_household, 'Kids per Household')
         biased_pmf = pmf.bias()
 
