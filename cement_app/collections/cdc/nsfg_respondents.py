@@ -6,8 +6,14 @@ class NsfgRespondentsCollection:
     @staticmethod
     def kids_per_household():
         # Returns pandas.core.series.Series object.
-        collection = NsfgRespondentsCollection()
+        collection = females_with_multiple_births()
         return collection.data_frame.numkdhh
+
+    @staticmethod
+    def females_with_multiple_births():
+        # Returns pandas.core.series.Series object.
+        collection = NsfgRespondentsCollection()
+        return collection.data_frame[collection.data_frame.pregnum > 1]
 
     #
     # Properties

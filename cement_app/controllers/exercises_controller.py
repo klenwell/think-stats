@@ -16,7 +16,11 @@ class ExercisesController(Controller):
     # python app.py exercise 3.3
     @expose(aliases=['3.3'])
     def ch3_3(self):
-        print('TODO')
+        moms = NsfgRespondentsCollection.females_with_multiple_births()
+        print(type(moms))
+        breakpoint()
+        preg_len_diffs = [mom.preg_len_diff() for mom in moms]
+        print(sum(preg_len_diffs) / len(preg_len_diffs))
 
     # python app.py exercise 3.2
     @expose(aliases=['3.2'])
