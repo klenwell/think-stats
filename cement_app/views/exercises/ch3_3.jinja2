@@ -1,0 +1,17 @@
+Think Stats 2e
+Chapter 3 | Exercise 3
+======================
+I started with the question, “Are first babies more likely to be late?” To address
+it, I computed the difference in means between groups of babies, but I ignored the
+possibility that there might be a difference between first babies and others for
+the same woman.
+
+To address this version of the question, select respondents who have at least two
+babies and compute pairwise differences. Does this formulation of the question yield
+a different result?
+
+moms: {{ count }}
+mean: {{ "%.2f" | format(mean) }}
+stdev: {{ "%.2f" | format(stdev) }}
+min: {{ min }}
+max: {{ max }}

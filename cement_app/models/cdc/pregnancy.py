@@ -31,7 +31,6 @@ class Pregnancy:
         return self.attrs.get('first', False)
 
     # Private
-    # Private
     def __repr__(self):
         f = '<Pregnancy sex={} weight={} weeks={}>'
         return f.format(self.sex, self.weight, self.weeks)

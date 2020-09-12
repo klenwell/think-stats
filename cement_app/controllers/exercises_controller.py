@@ -1,5 +1,6 @@
 from cement import Controller
 from cement import ex as expose
+from statistics import mean, stdev
 
 from cement_app.extracts.cdc.nsfg import FamilyGrowthExtract
 from cement_app.decorators.histogram import Histogram
@@ -16,9 +17,17 @@ class ExercisesController(Controller):
     # python app.py exercise 3.3
     @expose(aliases=['3.3'])
     def ch3_3(self):
+        # TODO: Make this faster by using a different Pandas loop method
         moms = NsfgRespondents.females_with_multiple_babies()
         preg_len_diffs = [mom.diff_first_baby_weeks() for mom in moms]
-        print(sum(preg_len_diffs) / len(preg_len_diffs))
+        vars = {
+            'count': len(preg_len_diffs),
+            'mean': mean(preg_len_diffs),
+            'stdev': stdev(preg_len_diffs),
+            'min': min(preg_len_diffs),
+            'max': max(preg_len_diffs)
+        }
+        self.app.render(vars, 'exercises/ch3_3.jinja2')
 
     # python app.py exercise 3.2
     @expose(aliases=['3.2'])
