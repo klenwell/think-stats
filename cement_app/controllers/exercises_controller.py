@@ -1,8 +1,13 @@
 from cement import Controller
 from cement import ex as expose
+from statistics import mean, stdev
 
 from cement_app.extracts.cdc.nsfg import FamilyGrowthExtract
+from cement_app.extracts.races.joyce import JamesJoyceRelayExtract
 from cement_app.decorators.histogram import Histogram
+from cement_app.decorators.pmf import ProbabilityMassFunction
+from cement_app.decorators.observed_pmf import ObservedPmf
+from cement_app.collections.cdc.nsfg_respondents import NsfgRespondents
 
 
 class ExercisesController(Controller):
@@ -10,6 +15,63 @@ class ExercisesController(Controller):
         label = 'exercise'
         stacked_on = 'base'
         stacked_type = 'nested'
+
+    # python app.py exercise 3.4
+    @expose(aliases=['3.4'])
+    def ch3_4(self):
+        observer_speed = 7.5
+
+        extract = JamesJoyceRelayExtract.for_2010()
+        pmf = ProbabilityMassFunction(extract.speed_bins)
+        observed_pmf = ObservedPmf(pmf, observer_speed)
+
+        chart = observed_pmf.plot()
+        chart.show()
+
+        chart = pmf.plot_against(observed_pmf)
+        chart.show()
+
+    # python app.py exercise 3.3
+    @expose(aliases=['3.3'])
+    def ch3_3(self):
+        # TODO: Make this faster by using a different Pandas loop method
+        moms = NsfgRespondents.females_with_multiple_babies()
+        preg_len_diffs = [mom.diff_first_baby_weeks() for mom in moms]
+        vars = {
+            'count': len(preg_len_diffs),
+            'mean': mean(preg_len_diffs),
+            'stdev': stdev(preg_len_diffs),
+            'min': min(preg_len_diffs),
+            'max': max(preg_len_diffs)
+        }
+        self.app.render(vars, 'exercises/ch3_3.jinja2')
+
+    # python app.py exercise 3.2
+    @expose(aliases=['3.2'])
+    def ch3_2(self):
+        simple_list = [1, 2, 2, 3, 5]
+        pmf = ProbabilityMassFunction(simple_list)
+        vars = {
+            'pmf': pmf
+        }
+        self.app.render(vars, 'exercises/ch3_2.jinja2')
+
+    # python app.py exercise 3.1
+    @expose(aliases=['3.1'])
+    def ch3_1(self):
+        kids_per_household = NsfgRespondents.kids_per_household()
+        pmf = ProbabilityMassFunction(kids_per_household, 'Kids per Household')
+        biased_pmf = pmf.bias()
+
+        # Chart will pop up and halt.
+        chart = pmf.plot_against(biased_pmf)
+        chart.show()
+
+        vars = {
+            'pmf': pmf,
+            'biased_pmf': biased_pmf
+        }
+        self.app.render(vars, 'exercises/ch3_1.jinja2')
 
     # python app.py exercise 2.4
     @expose(aliases=['2.4'])

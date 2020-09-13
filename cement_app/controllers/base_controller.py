@@ -10,17 +10,26 @@ class BaseController(Controller):
     # This command can be used for testing and development.
     @expose(help="Run the Application interactively. Useful for testing and development.")
     def interactive(self):
-        from cement_app.decorators.histogram import Histogram
         from cement_app.extracts.cdc.nsfg import FamilyGrowthExtract
+        from cement_app.decorators.pmf import ProbabilityMassFunction
 
-        LIVE_BIRTH = 1
         extract = FamilyGrowthExtract()
+        first_births = extract.live_first_births
+        other_births = extract.live_non_first_births
 
-        live = extract.pregnancies[extract.pregnancies.outcome == LIVE_BIRTH]
-        histogram = Histogram.from_series(live.birthwgt_lb, label='birthweight lb')
+        first_pmf = ProbabilityMassFunction(first_births.prglngth, 'first')
+        plot = first_pmf.plot()
+        plot.show()
+
+        other_pmf = ProbabilityMassFunction(other_births.prglngth, 'non-first')
+        plot = other_pmf.plot()
+        plot.show()
+
+        plot = first_pmf.plot_against(other_pmf)
+        plot.xlabel('Weeks')
+        plot.axis([27, 46, 0, 0.6])
+        plot.show()
         breakpoint()
-
-        histogram.plot(xlabel='value', ylabel='frequency')
 
     # python app.py test -f foo arg1 extra1 extra2
     @expose(

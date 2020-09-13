@@ -26,15 +26,17 @@ class Histogram(MutableMapping):
     #
     def __init__(self, data_list, label=None):
         self.data = data_list
+        self.label = label
         self.store = dict()
         self.update(Counter(data_list))
-
-        # Keyword args
-        self.label = label
 
     #
     # Properties
     #
+    @property
+    def total(self):
+        return sum(self.counts())
+
     @property
     def mean(self):
         total = sum([v*n for (v, n) in self.items()])
@@ -66,7 +68,7 @@ class Histogram(MutableMapping):
         return list(self.keys())
 
     def counts(self):
-        return [count for (_, count) in self.items()]
+        return [freq for freq in self.store.values()]
 
     def freq(self, value):
         return self.store.get(value, 0)
@@ -87,6 +89,8 @@ class Histogram(MutableMapping):
             pyplot.ylabel(ylabel)
 
         xs, ys = zip(*sorted(self.items()))
+
+        # Note: bar vs plot
         pyplot.bar(xs, ys, **bar_options)
         pyplot.show()
 
