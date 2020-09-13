@@ -25,6 +25,9 @@ class ExercisesController(Controller):
         pmf = ProbabilityMassFunction(extract.speed_bins)
         observed_pmf = ObservedPmf(pmf, observer_speed)
 
+        chart = observed_pmf.plot()
+        chart.show()
+
         chart = pmf.plot_against(observed_pmf)
         chart.show()
 
