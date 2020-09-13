@@ -1,5 +1,5 @@
 """
-Data Source:
+Source:
 https://github.com/AllenDowney/ThinkStats2/blob/9ee747/code/relay.py
 https://github.com/AllenDowney/ThinkStats2/blob/9ee747/code/Apr25_27thAn_set1.shtml
 
@@ -24,7 +24,6 @@ class JamesJoyceRelayExtract:
     #
     # Static Methods
     #
-
     def for_2010():
         file_path = path_join(CDC_DATA_DIR, RESULTS_2010_FILE)
         extract = JamesJoyceRelayExtract(file_path)
@@ -38,7 +37,7 @@ class JamesJoyceRelayExtract:
         rows = self.process()
         return rows
 
-    @property
+    @cached_property
     def speeds(self):
         speeds = []
         col_index = 5
@@ -50,7 +49,7 @@ class JamesJoyceRelayExtract:
 
         return speeds
 
-    @property
+    @cached_property
     def speed_bins(self):
         """Return numpy array of speeds rounds off to fit 100 bins.
         """
@@ -87,6 +86,29 @@ class JamesJoyceRelayExtract:
     #
     # Private
     #
+    def process_row(self, line):
+        """Data row will look like this:
+        1   1/362  M2039   30:43   30:42   4:57 Brian Harvey           22 M  1422 Allston MA
+
+        Columns:
+        Place Div/Tot  Div   Guntime Nettime  Pace  Name                   Ag S Race# City/state
+        """
+        cols = line.split()
+
+        if len(cols) < len(self.columns):
+            return None
+
+        place, div_tot, div, gun, net, pace = cols[0:6]
+
+        if '/' not in div_tot:
+            return None
+
+        for time in [gun, net, pace]:
+            if ':' not in time:
+                return None
+
+        return place, div_tot, div, gun, net, pace
+
     def bin_data(self, data, low, high, n):
         """Rounds data off into bins.
 
@@ -106,26 +128,3 @@ class JamesJoyceRelayExtract:
         secs = (int(min) * 60) + int(sec)
         mph = 1.0 / secs * 60 * 60
         return mph
-
-    def process_row(self, line):
-        """Data row will look like this:
-        1   1/362  M2039   30:43   30:42   4:57 Brian Harvey           22 M  1422 Allston MA
-
-        Columns:
-        Place Div/Tot  Div   Guntime Nettime  Pace  Name                   Ag S Race# City/state
-        """
-        cols = line.split()
-
-        if len(cols) < 6:
-            return None
-
-        place, divtot, div, gun, net, pace = cols[0:6]
-
-        if '/' not in divtot:
-            return None
-
-        for time in [gun, net, pace]:
-            if ':' not in time:
-                return None
-
-        return place, divtot, div, gun, net, pace

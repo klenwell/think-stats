@@ -6,6 +6,7 @@ from cement_app.extracts.cdc.nsfg import FamilyGrowthExtract
 from cement_app.extracts.races.joyce import JamesJoyceRelayExtract
 from cement_app.decorators.histogram import Histogram
 from cement_app.decorators.pmf import ProbabilityMassFunction
+from cement_app.decorators.observed_pmf import ObservedPmf
 from cement_app.collections.cdc.nsfg_respondents import NsfgRespondents
 
 
@@ -18,11 +19,14 @@ class ExercisesController(Controller):
     # python app.py exercise 3.4
     @expose(aliases=['3.4'])
     def ch3_4(self):
+        observer_speed = 7.5
+
         extract = JamesJoyceRelayExtract.for_2010()
-        print(extract.speeds)
-        print(extract.speed_bins)
-        breakpoint()
-        print('TODO')
+        pmf = ProbabilityMassFunction(extract.speed_bins)
+        observed_pmf = ObservedPmf(pmf, observer_speed)
+
+        chart = pmf.plot_against(observed_pmf)
+        chart.show()
 
     # python app.py exercise 3.3
     @expose(aliases=['3.3'])
