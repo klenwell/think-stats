@@ -11,24 +11,12 @@ class BaseController(Controller):
     @expose(help="Run the Application interactively. Useful for testing and development.")
     def interactive(self):
         from cement_app.extracts.cdc.nsfg import FamilyGrowthExtract
-        from cement_app.decorators.pmf import ProbabilityMassFunction
+        from cement_app.decorators.statistical_mapping import StatisticalMapping
 
         extract = FamilyGrowthExtract()
-        first_births = extract.live_first_births
-        other_births = extract.live_non_first_births
-
-        first_pmf = ProbabilityMassFunction(first_births.prglngth, 'first')
-        plot = first_pmf.plot()
-        plot.show()
-
-        other_pmf = ProbabilityMassFunction(other_births.prglngth, 'non-first')
-        plot = other_pmf.plot()
-        plot.show()
-
-        plot = first_pmf.plot_against(other_pmf)
-        plot.xlabel('Weeks')
-        plot.axis([27, 46, 0, 0.6])
-        plot.show()
+        mapping = StatisticalMapping(extract.live_births.prglngth, 'births')
+        chart = mapping.plot()
+        chart.show()
         breakpoint()
 
     # python app.py test -f foo arg1 extra1 extra2
