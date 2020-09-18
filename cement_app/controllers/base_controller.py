@@ -11,11 +11,14 @@ class BaseController(Controller):
     @expose(help="Run the Application interactively. Useful for testing and development.")
     def interactive(self):
         from cement_app.extracts.cdc.nsfg import FamilyGrowthExtract
-        from cement_app.decorators.statistical_mapping import StatisticalMapping
+        from cement_app.decorators.cdf import CumulativeDistributionFunction
 
         extract = FamilyGrowthExtract()
-        mapping = StatisticalMapping(extract.live_births.prglngth, 'births')
-        chart = mapping.plot()
+        cdf = CumulativeDistributionFunction.from_series(extract.live_births.prglngth, 'births')
+        print(cdf)
+        breakpoint()
+
+        chart = cdf.plot()
         chart.show()
         breakpoint()
 

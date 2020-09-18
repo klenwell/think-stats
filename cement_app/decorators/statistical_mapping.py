@@ -21,8 +21,8 @@ class StatisticalMapping(MutableMapping):
         """
         data_list = series.to_list()
         cleaned_data = [n for n in data_list if not math.isnan(n)]
-        pmf = StatisticalMapping(cleaned_data, label=label)
-        return pmf
+        stats_mapping = StatisticalMapping(cleaned_data, label=label)
+        return stats_mapping
 
     #
     # Constructor
@@ -103,10 +103,11 @@ class StatisticalMapping(MutableMapping):
     # Private Methods
     #
     def __repr__(self):
+        name = self.__class__.__name__
         if not self.label:
-            return 'StatisticalMapping({})'.format(self.store)
+            return '{}({})'.format(name, self.store)
         else:
-            return 'StatisticalMapping[{}]({})'.format(self.label, self.store)
+            return '{}[{}]({})'.format(name, self.label, self.store)
 
     #
     # Required MutableMapping Interface Methods
