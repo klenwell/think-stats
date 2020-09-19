@@ -24,14 +24,16 @@ class CumulativeDistributionFunction(StatisticalMapping):
     def __init__(self, data_list, label=None):
         super().__init__(data_list, label)
 
+    def init_store(self):
         cdf_dict = {}
-        total_counts = sum(self.store.values())
+        super().init_store()
+        total_sum = sum(val*freq for val, freq in self.store.items())
         cumulative_sum = 0
 
         for value in sorted(self.values()):
             freq = self.freq(value)
-            cumulative_sum += freq
-            cdf_dict[value] = cumulative_sum / total_counts
+            cumulative_sum += (value * freq)
+            cdf_dict[value] = cumulative_sum / total_sum
 
         self.update(cdf_dict)
 

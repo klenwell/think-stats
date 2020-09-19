@@ -31,7 +31,10 @@ class StatisticalMapping(MutableMapping):
         self.data = data_list
         self.label = label
         self.store = dict()
-        self.update(Counter(data_list))
+        self.init_store()
+
+    def init_store(self):
+        self.update(Counter(self.data))
 
     #
     # Properties
