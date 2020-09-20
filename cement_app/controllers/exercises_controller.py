@@ -7,6 +7,7 @@ from cement_app.extracts.races.joyce import JamesJoyceRelayExtract
 from cement_app.decorators.histogram import Histogram
 from cement_app.decorators.pmf import ProbabilityMassFunction
 from cement_app.decorators.observed_pmf import ObservedPmf
+from cement_app.decorators.cdf import CumulativeDistributionFunction as CDF
 from cement_app.collections.cdc.nsfg_respondents import NsfgRespondents
 
 
@@ -15,6 +16,24 @@ class ExercisesController(Controller):
         label = 'exercise'
         stacked_on = 'base'
         stacked_type = 'nested'
+
+    # python app.py exercise 4.1
+    @expose(aliases=['4.1'])
+    def ch4_1(self):
+        my_birth_weight = 8.9
+
+        extract = FamilyGrowthExtract()
+        live_cdf = CDF.from_series(extract.live_births.totalwgt_lb, 'live')
+        first_cdf = CDF.from_series(extract.live_first_births.totalwgt_lb, 'first')
+        other_cdf = CDF.from_series(extract.live_non_first_births.totalwgt_lb, 'other')
+
+        vars = {
+            'my_birth_weight': my_birth_weight,
+            'live_percentile_rank': live_cdf.percentile_rank(my_birth_weight),
+            'first_percentile_rank': first_cdf.percentile_rank(my_birth_weight),
+            'other_percentile_rank': other_cdf.percentile_rank(my_birth_weight),
+        }
+        self.app.render(vars, 'exercises/ch4_1.jinja2')
 
     # python app.py exercise 3.4
     @expose(aliases=['3.4'])

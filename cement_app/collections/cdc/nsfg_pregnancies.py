@@ -5,6 +5,10 @@ from cement_app.models.cdc.pregnancy import Pregnancy
 
 class NsfgPregnancies:
     #
+    #
+    #
+
+    #
     # Properties
     #
     @cached_property
