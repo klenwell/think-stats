@@ -1,6 +1,7 @@
 import math
 from matplotlib import pyplot
 import numpy as np
+import bisect
 
 from cement_app.decorators.statistical_mapping import StatisticalMapping
 
@@ -40,10 +41,48 @@ class CumulativeDistributionFunction(StatisticalMapping):
     #
     # Properties
     #
+    @property
+    def sorted_values(self):
+        return sorted(self.values())
+
+    @property
+    def sorted_probs(self):
+        return sorted(self.store.values())
+
+    @property
+    def median(self):
+        return self.percentile(50)
 
     #
     # Instance Methods
     #
+    def prob(self, value):
+        """Given a value, computes the probability p = CDF(x).
+        """
+        if value < self.sorted_values[0]:
+            return 0
+
+        index = bisect.bisect(self.sorted_values, value)
+        prob = self.sorted_probs[index-1]
+        return prob
+
+    def value(self, prob):
+        """Given a probability, computes the corresponding value.
+        """
+        index = bisect.bisect_left(self.sorted_probs, prob)
+        return self.sorted_values[index]
+
+    def percentile_rank(self, value):
+        """Given a value, computes its percentile rank.
+        """
+        return self.prob(value) * 100
+
+    def percentile(self, percentile_rank):
+        """ Given a percentile rank, computes the corresponding value.
+        """
+        prob = percentile_rank / 100
+        return self.value(prob)
+
     def plot(self, **options):
         line_options = {
             'linewidth': 1,

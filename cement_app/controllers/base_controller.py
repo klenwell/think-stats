@@ -16,7 +16,15 @@ class BaseController(Controller):
         extract = FamilyGrowthExtract()
         cdf = CumulativeDistributionFunction.from_series(extract.live_births.prglngth, 'births')
         print(cdf)
-        breakpoint()
+
+        sample = {
+            'cdf.prob(38)': cdf.prob(38),
+            'cdf.value(cdf.prob(38))': cdf.value(cdf.prob(38)),
+            'cdf.percentile_rank(38)': cdf.percentile_rank(38),
+            'cdf.percentile(cdf.percentile_rank(38))': cdf.percentile(cdf.percentile_rank(38)),
+            'cdf.median': cdf.median
+        }
+        print(sample)
 
         chart = cdf.plot()
         chart.show()
