@@ -17,6 +17,26 @@ class ExercisesController(Controller):
         stacked_on = 'base'
         stacked_type = 'nested'
 
+    # python app.py exercise 4.2
+    @expose(aliases=['4.2'])
+    def ch4_2(self):
+        from random import random
+        random_1000 = lambda: [random() for n in range(1000)]
+
+        random_list = random_1000()
+        pmf = ProbabilityMassFunction(random_list)
+        cdf = CDF(random_list)
+
+        pmf.plot().show()
+        cdf.plot().show()
+
+        vars = {
+            'mean': pmf.mean,
+            'percentile_rank(0.5)': cdf.percentile_rank(0.5),
+            'percentile(50)': cdf.percentile(50)
+        }
+        print(vars)
+
     # python app.py exercise 4.1
     @expose(aliases=['4.1'])
     def ch4_1(self):
