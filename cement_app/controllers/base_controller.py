@@ -10,25 +10,14 @@ class BaseController(Controller):
     # This command can be used for testing and development.
     @expose(help="Run the Application interactively. Useful for testing and development.")
     def interactive(self):
-        from cement_app.extracts.cdc.nsfg import FamilyGrowthExtract
-        from cement_app.decorators.cdf import CumulativeDistributionFunction
+        from cement_app.distributions.analytic_distribution import AnalyticDistribution
 
-        extract = FamilyGrowthExtract()
-        cdf = CumulativeDistributionFunction.from_series(extract.live_births.prglngth, 'births')
-        print(cdf)
-
-        sample = {
-            'cdf.prob(38)': cdf.prob(38),
-            'cdf.value(cdf.prob(38))': cdf.value(cdf.prob(38)),
-            'cdf.percentile_rank(38)': cdf.percentile_rank(38),
-            'cdf.percentile(cdf.percentile_rank(38))': cdf.percentile(cdf.percentile_rank(38)),
-            'cdf.median': cdf.median
-        }
-        print(sample)
-
-        chart = cdf.plot()
-        chart.show()
+        dist = AnalyticDistribution.exponential()
+        print(dist.sequence)
         breakpoint()
+
+        chart = dist.plot()
+        chart.show()
 
     # python app.py test -f foo arg1 extra1 extra2
     @expose(
