@@ -10,6 +10,11 @@ class BaseController(Controller):
     # This command can be used for testing and development.
     @expose(help="Run the Application interactively. Useful for testing and development.")
     def interactive(self):
+        from cement_app.extracts.brisbane.births import BrisbaneBirthsExtract
+        extract = BrisbaneBirthsExtract()
+        print(extract.dataframe)
+        breakpoint()
+
         from cement_app.distributions.analytic_distribution import AnalyticDistribution
 
         dist = AnalyticDistribution.exponential()
