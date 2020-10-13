@@ -11,7 +11,14 @@ class BaseController(Controller):
     @expose(help="Run the Application interactively. Useful for testing and development.")
     def interactive(self):
         from cement_app.extracts.brisbane.births import BrisbaneBirthsExtract
+        from cement_app.decorators.cdf import CumulativeDistributionFunction as CDF
+
         extract = BrisbaneBirthsExtract()
+        diffs = extract.dataframe.minutes.diff()
+        cdf = CDF.from_series(diffs, 'actual')
+        chart = cdf.plot()
+        chart.show()
+
         print(extract.dataframe)
         breakpoint()
 

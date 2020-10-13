@@ -45,7 +45,7 @@ class BrisbaneBirthsExtract:
     def columns(self):
         return ['name', 'start', 'end', 'type']
 
-    @property
+    @cached_property
     def variables(self):
         variables = pandas.DataFrame(self.var_info, columns=self.columns)
         variables.end += 1
