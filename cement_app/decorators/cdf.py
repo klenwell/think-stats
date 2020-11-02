@@ -2,6 +2,7 @@ import math
 from matplotlib import pyplot
 import numpy as np
 import bisect
+from scipy import stats
 
 from cement_app.decorators.statistical_mapping import StatisticalMapping
 
@@ -17,6 +18,42 @@ class CumulativeDistributionFunction(StatisticalMapping):
         data_list = series.to_list()
         cleaned_data = [n for n in data_list if not math.isnan(n)]
         cdf = CumulativeDistributionFunction(cleaned_data, label=label)
+        return cdf
+
+    @staticmethod
+    def model_series(series, label="model"):
+        """series = pandas.series
+
+        Based on Think Stats 2 chapter 5.2
+        """
+        # Trim outliers yields a better fit
+        # Lop off high and low 1% of values
+        clean_series = series.dropna()
+        trimmed_margin = 0.01
+        trimmed_count = int(trimmed_margin * len(clean_series))
+        trimmed_series = sorted(clean_series)[trimmed_count:-trimmed_count]
+
+        # Compute mean
+        series_as_array = np.asarray(trimmed_series)
+        mean = series_as_array.mean()
+
+        # Compute variance
+        devs = series_as_array - mean
+        var = np.dot(devs, devs) / len(series_as_array)
+        sigma = np.sqrt(var)
+
+        # Render as normal CDF
+        low = min(trimmed_series)
+        high = max(trimmed_series)
+        steps = 101
+        vals = np.linspace(low, high, steps)
+        probs = stats.norm.cdf(vals, mean, sigma)
+
+        # Instantiate CDF
+        cdf = CumulativeDistributionFunction([], label=label)
+        for weight, cum_dist in zip(vals, probs):
+            cdf.store[weight] = cum_dist
+
         return cdf
 
     #

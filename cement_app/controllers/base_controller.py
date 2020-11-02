@@ -10,23 +10,20 @@ class BaseController(Controller):
     # This command can be used for testing and development.
     @expose(help="Run the Application interactively. Useful for testing and development.")
     def interactive(self):
-        from cement_app.extracts.brisbane.births import BrisbaneBirthsExtract
-        from cement_app.decorators.cdf import CumulativeDistributionFunction as CDF
+        from cement_app.extracts.cdc.nsfg import FamilyGrowthExtract
+        from cement_app.decorators.cdf import CumulativeDistributionFunction
 
-        extract = BrisbaneBirthsExtract()
-        diffs = extract.dataframe.minutes.diff()
-        cdf = CDF.from_series(diffs, 'actual')
-        chart = cdf.plot()
-        chart.show()
+        # Plot birthweights
+        extract = FamilyGrowthExtract()
+        cdf = CumulativeDistributionFunction.from_series(extract.live_births.totalwgt_lb, 'weight')
 
-        print(extract.dataframe)
-        breakpoint()
+        # Model birthweight CDF
+        model_cdf = CumulativeDistributionFunction.model_series(extract.live_births.totalwgt_lb)
+        model_chart = model_cdf.plot()
 
-        from cement_app.distributions.analytic_distribution import AnalyticDistribution
-
-        dist = AnalyticDistribution.exponential()
-        print(dist.sequence)
-        breakpoint()
+        # Plot birth chart over model chart
+        births_chart = cdf.plot()
+        births_chart.show()
 
         chart = dist.plot()
         chart.show()
