@@ -16,40 +16,9 @@ class BaseController(Controller):
         # Plot birthweights
         extract = FamilyGrowthExtract()
         cdf = CumulativeDistributionFunction.from_series(extract.live_births.totalwgt_lb, 'weight')
-        print(cdf.median)
 
-        # Plot Model
-        from scipy import stats
-        import numpy as np
-
-        # Birth weights sans null values
-        weights = extract.live_births.totalwgt_lb.dropna()
-
-        # Estimate parameters: trimming outliers yields a better fit
-        # Lop off high and low 1% of values
-        trimmed_margin = 0.01
-        trimmed_count = int(trimmed_margin * len(weights))
-        trimmed_weights = sorted(weights)[trimmed_count:-trimmed_count]
-
-        # Compute mean
-        weights_as_array = np.asarray(trimmed_weights)
-        mean = weights_as_array.mean()
-
-        # Compute variance
-        devs = weights_as_array - mean
-        var = np.dot(devs, devs) / len(weights_as_array)
-        sigma = np.sqrt(var)
-        print(var, sigma)
-
-        # xs, ps = thinkstats2.RenderNormalCdf(mu, sigma, low=0, high=12.5)
-        low, high, steps = 0, 12.5, 101
-        vals = np.linspace(low, high, steps)
-        probs = stats.norm.cdf(vals, mean, sigma)
-
-        model_cdf = CumulativeDistributionFunction([])
-        for weight, cum_dist in zip(vals, probs):
-            model_cdf.store[weight] = cum_dist
-
+        # Model birthweight CDF
+        model_cdf = CumulativeDistributionFunction.model_series(extract.live_births.totalwgt_lb)
         model_chart = model_cdf.plot()
 
         # Plot birth chart over model chart
