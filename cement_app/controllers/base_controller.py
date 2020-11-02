@@ -25,9 +25,6 @@ class BaseController(Controller):
         births_chart = cdf.plot()
         births_chart.show()
 
-        chart = dist.plot()
-        chart.show()
-
     # python app.py test -f foo arg1 extra1 extra2
     @expose(
         help="Test Cement framework and CLI.",
