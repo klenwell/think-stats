@@ -2,7 +2,6 @@
 Based on Think Stats 2, Chapter 5.3
 http://greenteapress.com/thinkstats2/html/thinkstats2006.html
 """
-import math
 from matplotlib import pyplot
 import numpy as np
 

@@ -13,10 +13,22 @@ class BaseController(Controller):
         from cement_app.extracts.cdc.nsfg import FamilyGrowthExtract
         from cement_app.decorators.cdf import CumulativeDistributionFunction
         from cement_app.distributions.normal_distribution import NormalDistribution
+        import numpy as np
+        from matplotlib import pyplot as plt
 
         # Extract
         extract = FamilyGrowthExtract()
         birth_weights_series = extract.live_births.totalwgt_lb
+
+        # Weights as normal distribution
+        n = len(birth_weights_series)
+        xs = np.random.normal(0, 1, n)
+        xs.sort()
+        ys = np.array(birth_weights_series)
+        ys.sort()
+
+        options = dict(linewidth=3, alpha=0.7, label='Normal')
+        plt.plot(xs, ys, '', **options)
 
         # As normal distribution
         normal_distribution = NormalDistribution.model_series(birth_weights_series, -4, 4)
@@ -26,7 +38,7 @@ class BaseController(Controller):
 
         # Model birthweight CDF
         model_cdf = CumulativeDistributionFunction.model_series(birth_weights_series)
-        model_chart = model_cdf.plot()
+        model_cdf.plot()
 
         # Plot birthweights chart over model chart
         cdf = CumulativeDistributionFunction.from_series(birth_weights_series, 'weight')
