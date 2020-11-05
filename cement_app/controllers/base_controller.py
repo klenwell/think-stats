@@ -12,16 +12,24 @@ class BaseController(Controller):
     def interactive(self):
         from cement_app.extracts.cdc.nsfg import FamilyGrowthExtract
         from cement_app.decorators.cdf import CumulativeDistributionFunction
+        from cement_app.distributions.normal_distribution import NormalDistribution
 
-        # Plot birthweights
+        # Extract
         extract = FamilyGrowthExtract()
-        cdf = CumulativeDistributionFunction.from_series(extract.live_births.totalwgt_lb, 'weight')
+        birth_weights_series = extract.live_births.totalwgt_lb
+
+        # As normal distribution
+        normal_distribution = NormalDistribution.model_series(birth_weights_series, -4, 4)
+        normal_chart = normal_distribution.plot_line()
+        normal_chart.show()
+        breakpoint()
 
         # Model birthweight CDF
-        model_cdf = CumulativeDistributionFunction.model_series(extract.live_births.totalwgt_lb)
+        model_cdf = CumulativeDistributionFunction.model_series(birth_weights_series)
         model_chart = model_cdf.plot()
 
-        # Plot birth chart over model chart
+        # Plot birthweights chart over model chart
+        cdf = CumulativeDistributionFunction.from_series(birth_weights_series, 'weight')
         births_chart = cdf.plot()
         births_chart.show()
 
