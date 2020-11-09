@@ -2,6 +2,7 @@ from cement import App
 from .controllers.base_controller import BaseController
 from .controllers.exercises_controller import ExercisesController
 from .controllers.charts_controller import ChartsController
+from .controllers.chapter_5_controller import Chapter5Controller
 
 
 class CementApp(App):
@@ -14,4 +15,9 @@ class CementApp(App):
         output_handler = 'jinja2'
         template_dir = './cement_app/views'
 
-        handlers = [BaseController, ExercisesController, ChartsController]
+        handlers = [
+            BaseController,
+            ExercisesController,
+            ChartsController,
+            Chapter5Controller
+        ]
