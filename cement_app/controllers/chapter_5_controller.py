@@ -4,9 +4,11 @@ from cement import ex as expose
 from scipy import stats
 import numpy as np
 from matplotlib import pyplot as plt
+import math
 
 from cement_app.extracts.brisbane.births import BrisbaneBirthsExtract
 from cement_app.extracts.cdc.nsfg import FamilyGrowthExtract
+from cement_app.extracts.cdc.brfss import BehavioralRiskFactorExtract
 from cement_app.decorators.cdf import CumulativeDistributionFunction as CDF
 from cement_app.distributions.normal_distribution import NormalDistribution
 
@@ -16,6 +18,40 @@ class Chapter5Controller(Controller):
         label = 'ch-5'
         stacked_on = 'base'
         stacked_type = 'nested'
+
+    # python app.py ch-5 e1
+    @expose(aliases=['e1'])
+    def exercise_5_1(self):
+        # US Male heights
+        loc = 178
+        scale = 7.7
+        cm_in_inch = 2.54
+
+        blue_man_min = 70 * cm_in_inch
+        blue_man_max = 73 * cm_in_inch
+
+        extract = BehavioralRiskFactorExtract()
+        male_heights_with_nans = extract.males.htm3.to_list()
+        male_heights = [n for n in male_heights_with_nans if not math.isnan(n)]
+        num_males = len(male_heights)
+
+        cdf_min = stats.norm.cdf(blue_man_min, loc=loc, scale=scale)
+        cdf_max = stats.norm.cdf(blue_man_max, loc=loc, scale=scale)
+        actual_males = [ht for ht in male_heights if ht >= blue_man_min and ht <= blue_man_max]
+
+        vars = {
+            'num_males': num_males,
+            'blue_man_min_max': (blue_man_min, blue_man_max),
+            'cdf_min': cdf_min,
+            'cdf_max': cdf_max,
+            'cdf_pct': cdf_max - cdf_min,
+            'cdf_count': (cdf_max - cdf_min) * num_males,
+            'actual_count': len(actual_males),
+            'actual_pct': len(actual_males) / num_males
+        }
+        print(vars)
+        breakpoint()
+        self.app.render(vars, 'exercises/ch5_1.jinja2')
 
     # python app.py ch-5 s3
     @expose(aliases=['s3'])
