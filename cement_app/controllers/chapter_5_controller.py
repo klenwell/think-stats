@@ -19,6 +19,29 @@ class Chapter5Controller(Controller):
         stacked_on = 'base'
         stacked_type = 'nested'
 
+    # python app.py ch-5 e2
+    @expose(aliases=['e2'])
+    def exercise_5_2(self):
+        x_min = 1.0  # meter
+        alpha = 1.7
+
+        # Use scipy pareto
+        pareto_dist = stats.pareto(b=alpha, scale=x_min)
+
+        # ppf = percent point function or inverse CDF
+        seven_billion = 7e9
+        top_percentile = 1 - (1 / seven_billion)
+        tallest_of_7_billion = pareto_dist.ppf(top_percentile)
+
+        vars = {
+            'mean_height': pareto_dist.mean(),
+            'shorter_than_mean': pareto_dist.cdf(pareto_dist.mean()) * 100,
+            'taller_than_1_km': (1 - pareto_dist.cdf(1000)) * seven_billion,
+            'tallest_height': tallest_of_7_billion
+        }
+
+        self.app.render(vars, 'exercises/ch5_2.jinja2')
+
     # python app.py ch-5 e1
     @expose(aliases=['e1'])
     def exercise_5_1(self):
@@ -42,15 +65,12 @@ class Chapter5Controller(Controller):
         vars = {
             'num_males': num_males,
             'blue_man_min_max': (blue_man_min, blue_man_max),
-            'cdf_min': cdf_min,
-            'cdf_max': cdf_max,
+            'cdf_min_cdf_max': (cdf_min, cdf_max),
             'cdf_pct': cdf_max - cdf_min,
             'cdf_count': (cdf_max - cdf_min) * num_males,
             'actual_count': len(actual_males),
             'actual_pct': len(actual_males) / num_males
         }
-        print(vars)
-        breakpoint()
         self.app.render(vars, 'exercises/ch5_1.jinja2')
 
     # python app.py ch-5 s3

@@ -1,0 +1,20 @@
+Think Stats 2e
+Chapter 5 | Exercise 2
+======================
+To get a feel for the Pareto distribution, let’s see how different the world
+would be if the distribution of human height were Pareto. With the parameters
+xm = 1 m and α = 1.7, we get a distribution with a reasonable minimum, 1 m, and
+median, 1.5 m.
+
+Plot this distribution.
+
+- What is the mean human height in Pareto world?
+- What fraction of the population is shorter than the mean?
+- If there are 7 billion people in Pareto world, how many do we expect to be taller
+  than 1 km?
+- How tall do we expect the tallest person to be?
+
+Pareto Mean Human Height: {{ mean_height }} m
+Shorter than Mean: {{ "%.1f" | format(shorter_than_mean) }}%
+Taller than 1km (out of 7 billion): {{ taller_than_1_km }}
+Tallest Person (out of 7 billion): {{ tallest_height }} m
